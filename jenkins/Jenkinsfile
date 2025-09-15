@@ -12,7 +12,7 @@ pipeline {
                 script {
                     echo 'Building the application Docker image...'
                     // Use docker-compose to build the image, as it knows the context and Dockerfile location.
-                    sh 'docker-compose build reminder-app'
+                    sh 'docker-compose -f docker-compose.app.yaml build reminder-app'
                 }
             }
         }
@@ -23,7 +23,7 @@ pipeline {
                     try {
                         echo 'Starting services for testing...'
                         // Start all services in detached mode.
-                        sh 'docker-compose up -d'
+                        sh 'docker-compose -f docker-compose.app.yaml up -d'
                         
                         // Add a delay to give the application and database time to start up.
                         echo 'Waiting 20 seconds for services to initialize...'
@@ -37,7 +37,7 @@ pipeline {
                         // This 'finally' block ensures that the services are always shut down,
                         // even if the tests fail.
                         echo 'Tearing down the test environment...'
-                        sh 'docker-compose down'
+                        sh 'docker-compose -f docker-compose.app.yaml down'
                     }
                 }
             }
