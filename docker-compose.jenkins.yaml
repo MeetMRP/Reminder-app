@@ -14,6 +14,14 @@ services:
       - jenkins_home:/var/jenkins_home # Mount the Jenkins home directory to persist data.
       - ./jenkins/create-pipeline-job.groovy:/usr/share/jenkins/ref/init.groovy.d/create-job.groovy # Mount the Groovy script into the init directory. It will run on startup.
       - /var/run/docker.sock:/var/run/docker.sock # Mount the Docker socket to allow Jenkins to use the host's Docker daemon.
+    networks:
+      - reminder-network
 
 volumes:
   jenkins_home:
+
+networks:
+  reminder-network:
+    name: reminder-network
+    driver: bridge
+    enable_ipv6: false   # optional, to avoid IPv6 warnings

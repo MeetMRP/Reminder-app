@@ -26,8 +26,8 @@ pipeline {
                         sh 'docker-compose -f docker-compose.app.yaml up -d'
                         
                         // Add a delay to give the application and database time to start up.
-                        echo 'Waiting 20 seconds for services to initialize...'
-                        sleep 20
+                        echo 'Waiting 5 seconds for services to initialize...'
+                        sleep 5
 
                         echo 'Running integration tests...'
                         // Execute the test script.

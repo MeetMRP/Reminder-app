@@ -10,7 +10,9 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: admin
     volumes:
       - mongo-data:/data/db
-  
+    networks:
+      - reminder-network
+
   mongo-express:
     image: mongo-express:latest
     ports:
@@ -22,7 +24,9 @@ services:
       ME_CONFIG_MONGODB_URL: mongodb://admin:admin@mongo:27017/
     depends_on:
       - mongo
-  
+    networks:
+      - reminder-network
+
   reminder-app:
     build:
       context: ./app
@@ -33,7 +37,14 @@ services:
       MONGODB_URI: "mongodb://admin:admin@mongo:27017/reminderapp?authSource=admin"
     depends_on:
       - mongo
+    networks:
+      - reminder-network
 
 volumes:
     mongo-data:
-    jenkins_home:
+
+networks:
+  reminder-network:
+    name: reminder-network
+    driver: bridge
+    enable_ipv6: false   # optional, to avoid IPv6 warnings
