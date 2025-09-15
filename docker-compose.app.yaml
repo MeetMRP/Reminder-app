@@ -47,4 +47,3 @@ networks:
   reminder-network:
     name: reminder-network
     driver: bridge
-    enable_ipv6: false   # optional, to avoid IPv6 warnings
