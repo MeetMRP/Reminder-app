@@ -37,7 +37,7 @@ pipeline {
                         // This 'finally' block ensures that the services are always shut down,
                         // even if the tests fail.
                         echo 'Tearing down the test environment...'
-                        sh 'docker-compose -f docker-compose.app.yaml down'
+                        // sh 'docker-compose -f docker-compose.app.yaml down'
                     }
                 }
             }
