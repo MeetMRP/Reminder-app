@@ -22,5 +22,4 @@ volumes:
 
 networks:
   reminder-network:
-    name: reminder-network
     driver: bridge
