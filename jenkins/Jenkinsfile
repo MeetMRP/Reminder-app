@@ -7,7 +7,7 @@ pipeline {
     }
 
     stages {
-        stage('1. Build') {
+        stage('Build Docker Image') {
             steps {
                 script {
                     echo 'Building the application Docker image...'
@@ -17,7 +17,7 @@ pipeline {
             }
         }
 
-        stage('2. Test') {
+        stage('Test on test environment') {
             steps {
                 script {
                     try {
@@ -37,20 +37,17 @@ pipeline {
                         // This 'finally' block ensures that the services are always shut down,
                         // even if the tests fail.
                         echo 'Tearing down the test environment...'
-                        // sh 'docker-compose -f docker-compose.app.yaml down'
+                        sh 'docker-compose -f docker-compose.app.yaml down'
                     }
                 }
             }
         }
 
-        stage('3. Deploy (Placeholder)') {
+        stage('Deploy') {
             steps {
                 script {
-                    // This is a placeholder for a real deployment. In a real-world scenario,
-                    // you would push your Docker image to a registry (like Docker Hub or ECR)
-                    // and then deploy it to a server.
-                    echo 'This is a placeholder for the deployment stage.'
-                    echo 'Example: sh "docker-compose push reminder-app"'
+                    echo "final deploy to server"
+                    sh 'docker-compose -f docker-compose.app.yaml up -d'
                 }
             }
         }
