@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  jenkins:
+    # Build the custom Jenkins image from the Dockerfile in the 'jenkins' directory.
+    build:
+      context: .
+      dockerfile: jenkins/Dockerfile.jenkins
+    container_name: jenkins
+    ports:
+      - "8080:8080" # Jenkins UI
+      - "50000:50000" # For agents
+    volumes:
+      - jenkins_home:/var/jenkins_home # Mount the Jenkins home directory to persist data.
+      - ./jenkins/create-pipeline-job.groovy:/usr/share/jenkins/ref/init.groovy.d/create-job.groovy # Mount the Groovy script into the init directory. It will run on startup.
+      - /var/run/docker.sock:/var/run/docker.sock # Mount the Docker socket to allow Jenkins to use the host's Docker daemon.
+
+volumes:
+  jenkins_home:

@@ -1,0 +1,25 @@
+# Start from the official Jenkins LTS image
+FROM jenkins/jenkins:lts-jdk11
+
+# Switch to the root user to install necessary packages
+USER root
+
+# Install Docker CLI and Docker Compose
+RUN apt-get update && apt-get install -y curl && \
+    curl -sSL https://get.docker.com/ | sh && \
+    curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose && \
+    chmod +x /usr/local/bin/docker-compose
+
+# Add the 'jenkins' user to the 'docker' group to allow it to run Docker commands
+RUN usermod -aG docker jenkins
+
+# Install necessary plugins from plugins.txt
+COPY jenkins/plugins.txt /usr/share/jenkins/ref/plugins.txt
+RUN jenkins-plugin-cli -f /usr/share/jenkins/ref/plugins.txt
+
+# Copy the Groovy script into the init directory and ensure correct permissions
+COPY jenkins/create-pipeline-job.groovy /usr/share/jenkins/ref/init.groovy.d/create-job.groovy
+RUN chmod 644 /usr/share/jenkins/ref/init.groovy.d/create-job.groovy
+
+# Switch back to the 'jenkins' user
+USER jenkins

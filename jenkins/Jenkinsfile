@@ -1,0 +1,71 @@
+pipeline {
+    agent any // This pipeline can run on any available Jenkins agent.
+
+    environment {
+        // Ensures that commands are run in a non-interactive mode.
+        CI = 'true'
+    }
+
+    stages {
+        stage('1. Build') {
+            steps {
+                script {
+                    echo 'Building the application Docker image...'
+                    // Use docker-compose to build the image, as it knows the context and Dockerfile location.
+                    sh 'docker-compose build reminder-app'
+                }
+            }
+        }
+
+        stage('2. Test') {
+            steps {
+                script {
+                    try {
+                        echo 'Starting services for testing...'
+                        // Start all services in detached mode.
+                        sh 'docker-compose up -d'
+                        
+                        // Add a delay to give the application and database time to start up.
+                        echo 'Waiting 20 seconds for services to initialize...'
+                        sleep 20
+
+                        echo 'Running integration tests...'
+                        // Execute the test script.
+                        sh 'npm test --prefix ./app'
+
+                    } finally {
+                        // This 'finally' block ensures that the services are always shut down,
+                        // even if the tests fail.
+                        echo 'Tearing down the test environment...'
+                        sh 'docker-compose down'
+                    }
+                }
+            }
+        }
+
+        stage('3. Deploy (Placeholder)') {
+            steps {
+                script {
+                    // This is a placeholder for a real deployment. In a real-world scenario,
+                    // you would push your Docker image to a registry (like Docker Hub or ECR)
+                    // and then deploy it to a server.
+                    echo 'This is a placeholder for the deployment stage.'
+                    echo 'Example: sh "docker-compose push reminder-app"'
+                }
+            }
+        }
+    }
+
+    post {
+        // The 'post' section runs after all stages are completed.
+        always {
+            echo 'Pipeline execution finished.'
+        }
+        success {
+            echo 'Pipeline completed successfully!'
+        }
+        failure {
+            echo 'Pipeline failed. Please check the logs.'
+        }
+    }
+}
