@@ -12,13 +12,18 @@ Before you begin, ensure you have the following installed on your system:
 
 - [Docker](https://docs.docker.com/get-docker/)
 - [Docker Compose](https://docs.docker.com/compose/install/)
+- [Jenkins](https://www.jenkins.io/)
 
 ### Running the Application
+
+There are 2 ways to run the application
+
+#### Direct run the application using the docker compose file
 
 To build and start all the services in the background, run the following command from the project root:
 
 ```bash
-docker-compose up --build -d
+docker-compose -f docker-compose.app.yaml up --build -d
 ```
 
 After running this, the following services will be accessible:
@@ -26,6 +31,18 @@ After running this, the following services will be accessible:
 - **Reminder App**: `http://localhost:3000`
 - **Mongo Express** (Database Admin UI): `http://localhost:8081`
   - *Credentials*: `admin` / `pass`
+
+#### Build the jenkins pipeline and then use the pipeline to test and deploy the application
+
+To get jenkins up run this
+
+```bash
+docker-compose -f docker-compose.jenkins.yaml up --build -d
+```
+
+After running this, jenkins will be visible here
+
+- **Jenkins Pipeline**: `http://localhost:8080`
 
 ### Stopping the Application
 
